@@ -1,7 +1,7 @@
 <h1>Full Stack Web Development Open - Part 4</h1>
 
 Testing Express servers, user administration</br></br>
-Exercises are commits. Done **2** out of *23*
+Exercises are commits. Done **3** out of *23*
 </br></br>
 
 ```
@@ -14,12 +14,15 @@ Exercises are commits. Done **2** out of *23*
  ┣ 📂utils
  ┃ ┣ 📜config.js
  ┃ ┣ 📜logger.js
- ┃ ┗ 📜middleware.js
+ ┃ ┣ 📜middleware.js
+ ┃ ┗ 📜list_helper.js
+ ┣ 📂tests
+ ┃ ┗ list_helper.test.js
  ┣ 📜.DS_Store
  ┣ 📜.env (gitignore)
  ┣ 📜app.js
  ┣ 📜index.js
- ┣ 📜oldIndex.js
+ ┣ 📜oldIndex(exercise4p1).js
  ┣ 📜package-lock.json
  ┗ 📜package.json
 ```
