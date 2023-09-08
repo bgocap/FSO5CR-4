@@ -9,7 +9,7 @@ const totalLikes = (blogs) =>{
 }
 
 const favoriteBlog = (blogs)=>{
-    if(blogs.length){
+    if(blogs.length!==0){
         const highestNumOfLikes = blogs.reduce((currentMax,blog)=>{
             return blog.likes>currentMax?blog.likes:currentMax;
         },blogs[0].likes)
@@ -21,9 +21,25 @@ const favoriteBlog = (blogs)=>{
         })
     }else{return{message:"no blog to show"}}
 }
+
+const mostBlogs = (blogs) => {
+    if(blogs.length!==0){const countMap = blogs.reduce((countMap, item) => {
+        countMap[item.author]=(countMap[item.author] || 0) + 1;
+        return countMap;
+        }, {});
+        const mostRepeated = Object.keys(countMap).reduce((mostRepeated, key) => {
+            return countMap[key]>countMap[mostRepeated]?key:mostRepeated;
+        }, Object.keys(countMap)[0]);
+        return ({
+            author: mostRepeated,
+            blogs: countMap[mostRepeated]
+        })
+    }else{return{message:"no blog to show"}}
+  }
   
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
