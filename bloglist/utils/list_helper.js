@@ -10,22 +10,23 @@ const totalLikes = (blogs) =>{
 
 const favoriteBlog = (blogs)=>{
     if(blogs.length!==0){
-        const highestNumOfLikes = blogs.reduce((currentMax,blog)=>{
-            return blog.likes>currentMax?blog.likes:currentMax;
-        },blogs[0].likes)
-        const favoriteBlog = blogs.find(blog=>blog.likes===highestNumOfLikes)
+        const maxLikes = blogs.reduce((maxLikes,item)=>{
+            if(item.likes>maxLikes.likes){maxLikes=item}
+            return maxLikes
+        },blogs[0])
         return ({
-            title : favoriteBlog.title,
-            author  : favoriteBlog.author,
-            likes : favoriteBlog.likes
+            title : maxLikes.title,
+            author  : maxLikes.author,
+            likes : maxLikes.likes
         })
-    }else{return{message:"no blog to show"}}
+    }else{return{message:"no blogs in the list"}}
 }
 
 const mostBlogs = (blogs) => {
-    if(blogs.length!==0){const countMap = blogs.reduce((countMap, item) => {
-        countMap[item.author]=(countMap[item.author] || 0) + 1;
-        return countMap;
+    if(blogs.length!==0){
+        const countMap = blogs.reduce((countMap, item) => {
+            countMap[item.author]=(countMap[item.author] || 0) + 1;
+            return countMap;
         }, {});
         const mostRepeated = Object.keys(countMap).reduce((mostRepeated, key) => {
             return countMap[key]>countMap[mostRepeated]?key:mostRepeated;
@@ -34,12 +35,28 @@ const mostBlogs = (blogs) => {
             author: mostRepeated,
             blogs: countMap[mostRepeated]
         })
-    }else{return{message:"no blog to show"}}
-  }
+    }else{return{message:"no blogs in the list"}}
+}
+
+const mostLikes = (blogs) => {
+    if(blogs.length!==0){
+    const countMap = blogs.reduce((countMap,item)=>{
+        countMap[item.author] = (countMap[item.author]||0) +item.likes;
+        return countMap;
+    },{})
+    const mostLiked = Object.keys(countMap).reduce((mostLiked, key) => {
+        return countMap[key]>countMap[mostLiked]?key:mostLiked;
+    }, Object.keys(countMap)[0]);
+    return ({
+        author: mostLiked,
+        likes: countMap[mostLiked]
+    })}else{return{message:"no blogs in the list"}}
+}
   
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
