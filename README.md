@@ -1,7 +1,7 @@
 <h1>Full Stack Web Development Open - Part 4</h1>
 
 Testing Express servers, user administration</br></br>
-Exercises are commits. Done **7** out of *23*
+Exercises are commits. Done **8** out of *23*
 </br></br>
 
 ```
@@ -17,7 +17,9 @@ Exercises are commits. Done **7** out of *23*
  ┃ ┣ 📜middleware.js
  ┃ ┗ 📜list_helper.js
  ┣ 📂tests
- ┃ ┗ list_helper.test.js
+ ┃ ┣ 📜list_api.test.js
+ ┃ ┣ 📜list_helper.test.js
+ ┃ ┗ 📜test_helper.js
  ┣ 📜.DS_Store
  ┣ 📜.env (gitignore)
  ┣ 📜app.js

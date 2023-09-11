@@ -3,18 +3,6 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URI
-
-console.log('MODEL: Connecting to database...')
-
-mongoose.connect(url)
-  .then(result => {
-    console.log('MODEL: Connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('MODEL: Error connecting to MongoDB:', error.message)
-  })
-
 const blogSchema = new mongoose.Schema({
     title: String,
     author: String,
