@@ -43,6 +43,20 @@ test('A valid blog can be added',async ()=>{
   expect(titles).toContain('POST Test')
 })
 
+test('When likes is missing in a POST request, it is filled with 0',async ()=>{
+  const newBlog = {
+    title:'POST 0 likes test',
+    author:'Diego2',
+    url:'https://google.com.pe',
+  }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  expect(response.body.likes).toEqual(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

@@ -10,7 +10,13 @@ blogsRouter.get('/', async (request, response) => {
 
 //CREATE AN ENTRY
 blogsRouter.post('/',async (request, response) =>{
-    const newBlog = new Blog(request.body)
+    const body = request.body
+    const newBlog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: (body.likes || 0)
+    })
     const savedBlog = await newBlog.save()
     response.status(201).json(savedBlog)
 })
