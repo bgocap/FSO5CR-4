@@ -11,8 +11,8 @@ blogsRouter.get('/', async (request, response) => {
 //CREATE AN ENTRY
 blogsRouter.post('/',async (request, response) =>{
     const newBlog = new Blog(request.body)
-    const savedBlog = await Blog.save(newBlog)
-    response.json(savedBlog)
+    const savedBlog = await newBlog.save()
+    response.status(201).json(savedBlog)
 })
 
 module.exports = blogsRouter

@@ -14,7 +14,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test('blogs are returned as json and numbers of blogs are checked', async () => {
+test('Blogs are returned as json and numbers of blogs are checked', async () => {
   const allBlogs = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
   expect(allBlogs.body).toHaveLength(helper.initialBlogs.length)
 })
@@ -22,6 +22,25 @@ test('blogs are returned as json and numbers of blogs are checked', async () => 
 test('Check that id is defined', async () => {
   const allblogs = await helper.blogsInDb()
   allblogs.map(blg=>expect(blg.id).toBeDefined())
+})
+
+test('A valid blog can be added',async ()=>{
+  const newBlog = {
+    title:'POST Test',
+    author:'Diego',
+    url:'https://wepresent.wetransfer.com',
+    likes:100
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+  const titles = blogsAtEnd.map(blgs => blgs.title)
+  expect(titles).toContain('POST Test')
 })
 
 afterAll(async () => {
