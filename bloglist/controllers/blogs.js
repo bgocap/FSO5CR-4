@@ -11,14 +11,16 @@ blogsRouter.get('/', async (request, response) => {
 //CREATE AN ENTRY
 blogsRouter.post('/',async (request, response) =>{
     const body = request.body
-    const newBlog = new Blog({
-        title: body.title,
-        author: body.author,
-        url: body.url,
-        likes: (body.likes || 0)
-    })
-    const savedBlog = await newBlog.save()
-    response.status(201).json(savedBlog)
+    if(body.url&&body.title){
+        const newBlog = new Blog({
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: (body.likes || 0)
+        })
+        const savedBlog = await newBlog.save()
+        response.status(201).json(savedBlog)
+    }else{response.status(400).end()}
 })
 
 module.exports = blogsRouter

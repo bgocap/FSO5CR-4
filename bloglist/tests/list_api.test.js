@@ -57,6 +57,24 @@ test('When likes is missing in a POST request, it is filled with 0',async ()=>{
   expect(response.body.likes).toEqual(0)
 })
 
+test('When title is missing in a POST request, it returns 400',async ()=>{
+  const newBlog = {
+    author:'impossibleAuthor',
+    url:'https://youtube.com',
+    likes: 2
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+})
+
+test('When url is missing in a POST request, it returns 400',async ()=>{
+  const newBlog = {
+    title:'The impossible blog',
+    author:'impossibleAuthor',
+    likes: 2
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
