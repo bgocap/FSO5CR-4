@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const { response } = require('express')
 const Blog = require('../models/blog')
+const { request } = require('../app')
 
 //GET ALL BLOGS
 blogsRouter.get('/', async (request, response) => {
@@ -27,6 +28,13 @@ blogsRouter.post('/',async (request, response) =>{
 blogsRouter.delete('/:id',async (request, response)=>{
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end() 
+})
+
+//UPDATE LIKES OF A BLOG BY ID
+blogsRouter.put('/:id',async (request,response)=>{
+    const newBlog = request.body
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id , newBlog , { new:true })
+    response.json(updatedBlog)
 })
 
 module.exports = blogsRouter
