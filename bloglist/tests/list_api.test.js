@@ -5,6 +5,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const { all } = require('../controllers/blogs')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -73,6 +74,11 @@ test('When url is missing in a POST request, it returns 400',async ()=>{
     likes: 2
   }
   await api.post('/api/blogs').send(newBlog).expect(400)
+})
+
+test('Can delete a blog by id', async ()=>{
+  const allBlogs = await helper.blogsInDb()
+  await api.delete(`/api/blogs/${allBlogs[0].id}`).expect(204)
 })
 
 afterAll(async () => {

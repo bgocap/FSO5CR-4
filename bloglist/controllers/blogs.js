@@ -8,10 +8,10 @@ blogsRouter.get('/', async (request, response) => {
     response.json(allBlogs)
 })
 
-//CREATE AN ENTRY
+//CREATE A BLOG
 blogsRouter.post('/',async (request, response) =>{
     const body = request.body
-    if(body.url&&body.title){
+    if(body.url && body.title){
         const newBlog = new Blog({
             title: body.title,
             author: body.author,
@@ -21,6 +21,12 @@ blogsRouter.post('/',async (request, response) =>{
         const savedBlog = await newBlog.save()
         response.status(201).json(savedBlog)
     }else{response.status(400).end()}
+})
+
+//DELETE A BLOG BY ID
+blogsRouter.delete('/:id',async (request, response)=>{
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end() 
 })
 
 module.exports = blogsRouter
