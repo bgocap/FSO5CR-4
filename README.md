@@ -8,8 +8,10 @@ Exercises are commits. Done **15** out of *23*
 📦bloglist
  ┣ 📂node_modules (gitignore)
  ┣ 📂controllers
+ ┃ ┣ 📜users.js
  ┃ ┗ 📜blogs.js
  ┣ 📂models
+ ┃ ┣ 📜user.js
  ┃ ┗ 📜blog.js
  ┣ 📂utils
  ┃ ┣ 📜config.js
