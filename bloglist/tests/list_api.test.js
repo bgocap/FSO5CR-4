@@ -9,10 +9,19 @@ const User = require('../models/user')
 const Blog = require('../models/blog')
 const { all } = require('../controllers/blogs')
 
+//DB SET initial Users
+beforeEach(async () => {
+  await User.deleteMany({})
+  const { username, name, password } = helper.initialUser
+  const passwordHash = await bcrypt.hash(password, 10)
+  const user = new User({username,name,passwordHash,})
+  await user.save()
+})
+
+//DB SET initial Blogs
 beforeEach(async () => {
   await Blog.deleteMany({})
-  const blogObjects = helper.initialBlogs
-      .map(blg => new Blog(blg))
+  const blogObjects = helper.initialBlogs.map(blg => new Blog(blg))
   const promiseArray = blogObjects.map(blg => blg.save())
   await Promise.all(promiseArray)
 })
@@ -30,14 +39,26 @@ describe('Verification of a blog',()=>{
 
 describe('Addition of a blog',()=>{
   test('a valid blog can be added',async ()=>{
+
+    const newLogin = {username:'user1',password:'password'}
+    const loginResponse = await api
+      .post('/api/login')
+      .send(newLogin)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    const token = loginResponse.body.token
+    
     const newBlog = {
       title:'POST Test',
       author:'Diego',
       url:'https://wepresent.wetransfer.com',
       likes:100
     }
+
+
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer '+ token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -46,9 +67,19 @@ describe('Addition of a blog',()=>{
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
     const titles = blogsAtEnd.map(blgs => blgs.title)
     expect(titles).toContain('POST Test')
+
   })
 
   test('when likes is missing in a POST request, it is filled with 0',async ()=>{
+    
+    const newLogin = {username:'user1',password:'password'}
+    const loginResponse = await api
+      .post('/api/login')
+      .send(newLogin)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    const token = loginResponse.body.token
+    
     const newBlog = {
       title:'POST 0 likes test',
       author:'Diego2',
@@ -56,6 +87,7 @@ describe('Addition of a blog',()=>{
     }
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer '+ token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -63,22 +95,52 @@ describe('Addition of a blog',()=>{
   })
 
   test('when title is missing in a POST request, it returns 400',async ()=>{
+    
+    const newLogin = {username:'user1',password:'password'}
+    const loginResponse = await api
+      .post('/api/login')
+      .send(newLogin)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    const token = loginResponse.body.token
+    
     const newBlog = {
       author:'impossibleAuthor',
       url:'https://youtube.com',
       likes: 2
     }
-    await api.post('/api/blogs').send(newBlog).expect(400)
+    await api.post('/api/blogs').set('Authorization', 'Bearer '+ token).send(newBlog).expect(400)
   })
 
   test('when url is missing in a POST request, it returns 400',async ()=>{
+    
+    const newLogin = {username:'user1',password:'password'}
+    const loginResponse = await api
+      .post('/api/login')
+      .send(newLogin)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    const token = loginResponse.body.token
+    
     const newBlog = {
       title:'The impossible blog',
       author:'impossibleAuthor',
       likes: 2
     }
-    await api.post('/api/blogs').send(newBlog).expect(400)
+    await api.post('/api/blogs').set('Authorization', 'Bearer '+ token).send(newBlog).expect(400)
   })
+
+  test('when the token is not given or invalid, it returns 401 unauthorized',async ()=>{
+        
+    const token = 'incorrect token'
+    const newBlog = {
+      title:'The impossible blog',
+      author:'impossibleAuthor',
+      likes: 2
+    }
+    await api.post('/api/blogs').set('Authorization', 'Bearer '+ token).send(newBlog).expect(401)
+  })
+
 })
 
 describe('Deletion of a blog',()=>{

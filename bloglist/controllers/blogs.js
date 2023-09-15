@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const Blog = require('../models/blog')
 const { request } = require('../app')
-const { userExtractor } = require('../utils/middleware')
+const { userExtractor, tokenExtractor } = require('../utils/middleware')
 
 //GET ALL BLOGS
 blogsRouter.get('/', async (request, response) => {
@@ -14,7 +14,7 @@ blogsRouter.get('/', async (request, response) => {
 
 
 //CREATE A BLOG
-blogsRouter.post('/',async (request, response) =>{
+blogsRouter.post('/',tokenExtractor,async (request, response) =>{
     const body = request.body
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if(body.url && body.title){

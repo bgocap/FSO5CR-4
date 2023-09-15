@@ -28,13 +28,17 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (request,response,next) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    request.token = authorization.replace('Bearer ', '')
+  }
+  next()
+}
+
 const userExtractor = (async (request,response,next) =>{
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
-    //temporary solution for POST
-    const token = authorization.replace('Bearer ', '')
-    request.token = token
-    //-------------------
     const decodedToken = jwt.verify(authorization.replace('Bearer ', ''), process.env.SECRET)
     request.user = await User.findById(decodedToken.id).populate('blogs',{title:1,author:1,url:1,id:1})
   } next()
@@ -44,5 +48,6 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
   userExtractor
 }
