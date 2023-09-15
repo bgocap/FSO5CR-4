@@ -41,8 +41,14 @@ blogsRouter.post('/',async (request, response) =>{
 
 //DELETE A BLOG BY ID
 blogsRouter.delete('/:id',async (request, response)=>{
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end() 
+    //const body = request.body
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const user = await User.findById(decodedToken.id).populate('blogs', {id:1})
+    if(user.blogs.some(blgs=>blgs.id===request.params.id)){
+        await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).end() 
+    }else{response.status(400).json({error: 'Invalid Token or ID' })}
+    
 })
 
 //UPDATE LIKES OF A BLOG BY ID
